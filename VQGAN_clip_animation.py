@@ -265,7 +265,7 @@ def main(args, config: Config, series):
                 TF.to_pil_image(out[0].cpu()).save("progress.png")  # type: ignore
                 # add_stegano_data("progress.png")
                 # add_xmp_data("progress.png")
-                display.display(display.Image("progress.png"))
+                # display.display(display.Image("progress.png"))
 
             def save_output(i, img, suffix=None):
                 filename = (
@@ -310,7 +310,7 @@ def main(args, config: Config, series):
                 with torch.no_grad():
                     z.copy_(z.maximum(z_min).minimum(z_max))
 
-            with tqdm() as pbar:
+            with tqdm(total=iterations_per_frame) as pbar:
                 if iterations_per_frame == 0:
                     save_output(i, img_0)
                 j = 1
