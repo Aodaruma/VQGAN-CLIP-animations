@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Tuple, Dict, Union, Optional, TypedDict
 
 
@@ -23,7 +23,7 @@ class Config:
     seed: Optional[int] = 0
     interval: int = 1
     initial_image: Optional[str] = None
-    target_images: List[ImagePrompt] = []
+    target_images: List[ImagePrompt] = field(default_factory=list)
     angle: Optional[Dict[str, float]] = None
     zoom: Optional[Dict[str, float]] = None
     translation_x: Optional[Dict[str, float]] = None
