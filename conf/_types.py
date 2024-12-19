@@ -28,4 +28,6 @@ class Config:
     zoom: Optional[Dict[str, float]] = field(default_factory=lambda: {"0": 1})
     translation_x: Dict[str, float] = field(default_factory=lambda: {"0": 0})
     translation_y: Dict[str, float] = field(default_factory=lambda: {"0": 0})
-    iterations_per_frame: Union[Dict[str, int], int] = 10
+    iterations_per_frame: Optional[Dict[str, int]] = field(
+        default_factory=lambda: {"0": 10}
+    )
