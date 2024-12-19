@@ -167,3 +167,4 @@ CLIP/
 
 conf/*
 !conf/test.yaml
+!conf/_types.py
