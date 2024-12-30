@@ -376,6 +376,9 @@ if __name__ == "__main__":
 
                 output_dir = output_dirs / f"{i:04d}"
                 output_dir.mkdir(parents=True, exist_ok=True)
+
+                for img in glob.glob(f"{output_dir}/*.png"):
+                    os.remove(img)
                 for img in glob.glob(f"{working_dir}/steps/*.png"):
                     shutil.move(img, output_dir)
 
@@ -388,6 +391,9 @@ if __name__ == "__main__":
         main(args, config, series)
         output_dir = Path(config_path).parent / "outputs"
         output_dir.mkdir(parents=True, exist_ok=True)
+
+        for img in glob.glob(f"{output_dir}/*.png"):
+            os.remove(img)
         for img in glob.glob(f"{working_dir}/steps/*.png"):
             shutil.move(img, output_dir)
 
