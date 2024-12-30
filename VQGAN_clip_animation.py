@@ -5,6 +5,7 @@ import os
 import cv2
 import pandas as pd
 import numpy as np
+import glob
 
 working_dir = "./content"
 
@@ -349,4 +350,20 @@ if __name__ == "__main__":
 
     config, args, series = read_param(config_path)
 
-    main(args, config, series)
+    # check is initial image path is provided as sequence images (e.g. image_*.png)
+    if config.initial_image and "*" in config.initial_image:
+        initial_images = sorted(glob.glob(config.initial_image))
+        if initial_images:
+            for i, img_path in enumerate(initial_images):
+                print(
+                    f"\n===== Processing initial image {img_path} ({i+1}/{len(initial_images)})"
+                )
+                if not os.path.isfile(img_path):
+                    print(f"Initial image {img_path} not found, skipping")
+                    continue
+                config.initial_image = img_path
+                main(args, config, series)
+        else:
+            raise ValueError(f"No images found in {Path(config.initial_image).parent}")
+    else:
+        main(args, config, series)

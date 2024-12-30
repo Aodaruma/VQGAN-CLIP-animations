@@ -17,6 +17,7 @@ import argparse
 import requests
 import os
 from tqdm import tqdm
+import re
 
 model_dir = "models"
 
@@ -44,6 +45,7 @@ def read_param(yaml_path) -> Tuple[Config, argparse.Namespace, Dict[str, pd.Seri
             "you will encounter out of memory errors either at the image generation stage or the "
             "video synthesis stage. If so, try reducing the resolution"
         )
+
     model_names = {
         "vqgan_imagenet_f16_16384": "ImageNet 16384",
         "vqgan_imagenet_f16_1024": "ImageNet 1024",
