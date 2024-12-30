@@ -174,7 +174,18 @@ def read_param(yaml_path) -> Tuple[Config, argparse.Namespace, Dict[str, pd.Seri
     #     iterations_per_frame, prompt_parser=int
     # )
 
-    parameter_dicts["zoom"] = config.zoom
+    # check config.zoom is Dict[str, float] or Dict[str, Tuple[float, float]]
+    if isinstance(config.zoom, dict) and len(config.zoom.values()) > 0:
+        ele = list(config.zoom.values())[0]
+        if isinstance(ele, float) or isinstance(ele, int):
+            parameter_dicts["zoom_x"] = config.zoom
+            parameter_dicts["zoom_y"] = config.zoom
+        elif isinstance(ele, list):
+            parameter_dicts["zoom_x"] = {k: v[0] for k, v in config.zoom.items()}  # type: ignore
+            parameter_dicts["zoom_y"] = {k: v[1] for k, v in config.zoom.items()}  # type: ignore
+    else:
+        parameter_dicts["zoom_x"] = 1
+        parameter_dicts["zoom_y"] = 1
     parameter_dicts["angle"] = config.angle
     parameter_dicts["translation_x"] = config.translation_x
     parameter_dicts["translation_y"] = config.translation_y
@@ -326,8 +337,26 @@ def read_param(yaml_path) -> Tuple[Config, argparse.Namespace, Dict[str, pd.Seri
         target_images_series[i] = " | ".join(combined_prompt)
 
     angle_series = get_inbetweens(parameter_dicts["angle"])
-    zoom_series = get_inbetweens(parameter_dicts["zoom"])
-    for i, zoom in enumerate(zoom_series):
+    # zoom_series = get_inbetweens(parameter_dicts["zoom"])
+    zoom_x_series = get_inbetweens(parameter_dicts["zoom_x"])
+    zoom_y_series = get_inbetweens(parameter_dicts["zoom_y"])
+    # for i, zoom in enumerate(zoom_series):
+    #     if zoom <= 0:
+    #         print(
+    #             f"WARNING: You have selected a zoom of {zoom} at frame {i}. "
+    #             "This is meaningless. "
+    #             "If you want to zoom out, use a value between 0 and 1. "
+    #             "If you want no zoom, use a value of 1."
+    #         )
+    for i, zoom in enumerate(zoom_x_series):
+        if zoom <= 0:
+            print(
+                f"WARNING: You have selected a zoom of {zoom} at frame {i}. "
+                "This is meaningless. "
+                "If you want to zoom out, use a value between 0 and 1. "
+                "If you want no zoom, use a value of 1."
+            )
+    for i, zoom in enumerate(zoom_y_series):
         if zoom <= 0:
             print(
                 f"WARNING: You have selected a zoom of {zoom} at frame {i}. "
@@ -350,7 +379,9 @@ def read_param(yaml_path) -> Tuple[Config, argparse.Namespace, Dict[str, pd.Seri
             "text_prompts_series": text_prompts_series,
             "target_images_series": target_images_series,
             "angle_series": angle_series,
-            "zoom_series": zoom_series,
+            # "zoom_series": zoom_series,
+            "zoom_x_series": zoom_x_series,
+            "zoom_y_series": zoom_y_series,
             "translation_x_series": translation_x_series,
             "translation_y_series": translation_y_series,
             "iterations_per_frame_series": iterations_per_frame_series,

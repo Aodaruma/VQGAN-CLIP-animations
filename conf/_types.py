@@ -25,7 +25,9 @@ class Config:
     initial_image: Optional[str] = None
     target_images: List[ImagePrompt] = field(default_factory=list)
     angle: Optional[Dict[str, float]] = field(default_factory=lambda: {"0": 0})
-    zoom: Optional[Dict[str, float]] = field(default_factory=lambda: {"0": 1})
+    zoom: Optional[Dict[str, Union[float, Tuple[float, float]]]] = field(
+        default_factory=lambda: {"0": 1}
+    )
     translation_x: Dict[str, float] = field(default_factory=lambda: {"0": 0})
     translation_y: Dict[str, float] = field(default_factory=lambda: {"0": 0})
     iterations_per_frame: Optional[Dict[str, int]] = field(

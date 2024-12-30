@@ -111,7 +111,9 @@ def main(args, config: Config, series):
         args.image_prompts = config.target_images
 
         angle = series["angle_series"][i]
-        zoom = series["zoom_series"][i]
+        # zoom = series["zoom_series"][i]
+        zoom_x = series["zoom_x_series"][i]
+        zoom_y = series["zoom_y_series"][i]
         translation_x = series["translation_x_series"][i]
         translation_y = series["translation_y_series"][i]
         iterations_per_frame = series["iterations_per_frame_series"][i]
@@ -119,7 +121,9 @@ def main(args, config: Config, series):
             f"config.text_prompts: {config.text_prompts}",
             f"image_prompts: {config.target_images}",
             f"angle: {angle}",
-            f"zoom: {zoom}",
+            # f"zoom: {zoom}",
+            f"zoom_x: {zoom_x}",
+            f"zoom_y: {zoom_y}",
             f"translation_x: {translation_x}",
             f"translation_y: {translation_y}",
             f"iterations_per_frame: {iterations_per_frame}",
@@ -146,11 +150,15 @@ def main(args, config: Config, series):
 
                 center = (1 * img_0.shape[1] // 2, 1 * img_0.shape[0] // 2)
                 trans_mat = np.float32([[1, 0, translation_x], [0, 1, translation_y]])  # type: ignore
-                rot_mat = cv2.getRotationMatrix2D(center, angle, zoom)  # type: ignore
+                # rot_mat = cv2.getRotationMatrix2D(center, angle, zoom)  # type: ignore
+                rot_mat = cv2.getRotationMatrix2D(center, angle, 1)  # type: ignore
+                zoom_mat = np.float32([[zoom_x, 0, 0], [0, zoom_y, 0]])  # type: ignore
 
                 trans_mat = np.vstack([trans_mat, [0, 0, 1]])
                 rot_mat = np.vstack([rot_mat, [0, 0, 1]])
+                zoom_mat = np.vstack([zoom_mat, [0, 0, 1]])
                 transformation_matrix = np.matmul(rot_mat, trans_mat)
+                transformation_matrix = np.matmul(zoom_mat, transformation_matrix)
 
                 img_0 = cv2.warpPerspective(
                     img_0,
