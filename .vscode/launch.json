@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}\\VQGAN_clip_animation.py",
             "console": "integratedTerminal",
             "args": [
-                "${command:pickArgs}"
+                "conf/${command:pickArgs}.yaml"
                 // "C:\\Users\\aodaruma\\Documents\\GitHub\\VQGAN-CLIP-animations\\conf\\test.yaml"
             ]
         }
