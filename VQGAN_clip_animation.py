@@ -161,10 +161,8 @@ def main(args, config: Config, series):
                 zoom_mat = np.vstack([zoom_mat, [0, 0, 1]])
                 to_center_mat = np.vstack([to_center_mat, [0, 0, 1]])
                 from_center_mat = np.vstack([from_center_mat, [0, 0, 1]])
-                transformation_matrix = np.matmul(to_center_mat, zoom_mat)
-                transformation_matrix = np.matmul(
-                    transformation_matrix, from_center_mat
-                )
+                transformation_matrix = np.matmul(from_center_mat, zoom_mat)
+                transformation_matrix = np.matmul(transformation_matrix, to_center_mat)
                 transformation_matrix = np.matmul(transformation_matrix, rot_mat)
                 transformation_matrix = np.matmul(transformation_matrix, trans_mat)
 
