@@ -153,11 +153,19 @@ def main(args, config: Config, series):
                 # rot_mat = cv2.getRotationMatrix2D(center, angle, zoom)  # type: ignore
                 rot_mat = cv2.getRotationMatrix2D(center, angle, 1)  # type: ignore
                 zoom_mat = np.float32([[zoom_x, 0, 0], [0, zoom_y, 0]])  # type: ignore
+                to_center_mat = np.float32([[1, 0, -img_0.shape[1] // 2], [0, 1, -img_0.shape[0] // 2]])  # type: ignore
+                from_center_mat = np.float32([[1, 0, img_0.shape[1] // 2], [0, 1, img_0.shape[0] // 2]])  # type: ignore
 
                 trans_mat = np.vstack([trans_mat, [0, 0, 1]])
                 rot_mat = np.vstack([rot_mat, [0, 0, 1]])
                 zoom_mat = np.vstack([zoom_mat, [0, 0, 1]])
-                transformation_matrix = np.matmul(zoom_mat, rot_mat)
+                to_center_mat = np.vstack([to_center_mat, [0, 0, 1]])
+                from_center_mat = np.vstack([from_center_mat, [0, 0, 1]])
+                transformation_matrix = np.matmul(to_center_mat, zoom_mat)
+                transformation_matrix = np.matmul(
+                    transformation_matrix, from_center_mat
+                )
+                transformation_matrix = np.matmul(transformation_matrix, rot_mat)
                 transformation_matrix = np.matmul(transformation_matrix, trans_mat)
 
                 img_0 = cv2.warpPerspective(
