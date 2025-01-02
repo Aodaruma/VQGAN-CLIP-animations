@@ -121,7 +121,7 @@ def parse_prompt(prompt):
     # weight -> weight of the prompt
     # stop -> negative weight of the prompt; -inf is not prevented from being used
 
-    vals = prompt.rsplit(":", 2)
+    vals = prompt.rsplit(": ", 2)
     vals = vals + ["", "1", "-inf"][len(vals) :]
     return vals[0], float(vals[1]), float(vals[2])
     # return prompt["prompt"], str(prompt["keyframes"]), "-inf"
