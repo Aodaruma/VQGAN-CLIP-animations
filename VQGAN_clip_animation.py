@@ -157,8 +157,8 @@ def main(args, config: Config, series):
                 trans_mat = np.vstack([trans_mat, [0, 0, 1]])
                 rot_mat = np.vstack([rot_mat, [0, 0, 1]])
                 zoom_mat = np.vstack([zoom_mat, [0, 0, 1]])
-                transformation_matrix = np.matmul(rot_mat, trans_mat)
-                transformation_matrix = np.matmul(zoom_mat, transformation_matrix)
+                transformation_matrix = np.matmul(zoom_mat, rot_mat)
+                transformation_matrix = np.matmul(transformation_matrix, trans_mat)
 
                 img_0 = cv2.warpPerspective(
                     img_0,
@@ -389,7 +389,10 @@ if __name__ == "__main__":
             raise ValueError(f"No images found in {Path(config.initial_image).parent}")
     else:
         main(args, config, series)
-        output_dir = Path(config_path).parent / "outputs"
+        if config.initial_image and config.initial_image != "":
+            output_dir = Path(config.initial_image).parent / "outputs"
+        else:
+            output_dir = Path("outputs")
         output_dir.mkdir(parents=True, exist_ok=True)
 
         for img in glob.glob(f"{output_dir}/*.png"):
