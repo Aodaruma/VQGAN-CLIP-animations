@@ -189,7 +189,10 @@ def read_param(yaml_path) -> Tuple[Config, argparse.Namespace, Dict[str, pd.Seri
     parameter_dicts["angle"] = config.angle
     parameter_dicts["translation_x"] = config.translation_x
     parameter_dicts["translation_y"] = config.translation_y
-    parameter_dicts["iterations_per_frame"] = config.iterations_per_frame
+    if isinstance(config.iterations_per_frame, int):
+        parameter_dicts["iterations_per_frame"] = {0: config.iterations_per_frame}
+    else:
+        parameter_dicts["iterations_per_frame"] = config.iterations_per_frame
 
     # text_prompts_dict = parse_key_frames(config.text_prompts)
     text_prompts_dict: Dict[str, Dict[str, float]] = {
